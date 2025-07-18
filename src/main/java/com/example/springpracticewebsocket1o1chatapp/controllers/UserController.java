@@ -35,7 +35,7 @@ public class UserController {
      * @return the added user
      */
     @MessageMapping("/user/add")
-    @SendTo("/user/public")
+    @SendTo("/topic/public")
     public User addUser(
             @Payload User user
     ) {
@@ -50,7 +50,7 @@ public class UserController {
      * @return the disconnected user
      */
     @MessageMapping("/user/disconnect")
-    @SendTo("/user/public")
+    @SendTo("/topic/public")
     public User disconnectUser(
             @Payload User user
     ) {
