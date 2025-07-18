@@ -6,8 +6,17 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
+/**
+ * Repository for managing users in the database.
+ */
 public interface UserRepo extends MongoRepository<User, String> {
 
+    /**
+     * Finds all users with a given status.
+     *
+     * @param status the status to search for
+     * @return a list of users with the specified status
+     */
     List<User> findAllByStatus(Status status);
 
 }

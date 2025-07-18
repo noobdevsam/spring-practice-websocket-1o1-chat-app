@@ -11,15 +11,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
+/**
+ * Controller for handling user-related operations.
+ */
 @Controller
 public class UserController {
 
     private final UserService userService;
 
+    /**
+     * Constructs a new UserController with the given user service.
+     *
+     * @param userService the service to manage users
+     */
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
+    /**
+     * Adds a new user to the system.
+     * The user is saved and a notification is sent to the public user topic.
+     * @param user the user to add
+     * @return the added user
+     */
     @MessageMapping("/user/add")
     @SendTo("/user/public")
     public User addUser(
@@ -29,6 +43,12 @@ public class UserController {
         return user;
     }
 
+    /**
+     * Disconnects a user from the system.
+     * The user's status is updated and a notification is sent to the public user topic.
+     * @param user the user to disconnect
+     * @return the disconnected user
+     */
     @MessageMapping("/user/disconnect")
     @SendTo("/user/public")
     public User disconnectUser(
@@ -38,6 +58,10 @@ public class UserController {
         return user;
     }
 
+    /**
+     * Retrieves a list of all connected users.
+     * @return a list of connected users
+     */
     @GetMapping("/users")
     public ResponseEntity<List<User>> getConnectedUsers() {
         return ResponseEntity.ok(userService.findConnectedUsers());

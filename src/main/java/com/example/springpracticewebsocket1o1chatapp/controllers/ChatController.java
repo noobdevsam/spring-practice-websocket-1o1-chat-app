@@ -13,17 +13,31 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
+/**
+ * Controller for handling chat-related operations.
+ */
 @Controller
 public class ChatController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatMessageService chatMessageService;
 
+    /**
+     * Constructs a new ChatController with the given messaging template and chat message service.
+     *
+     * @param simpMessagingTemplate the messaging template to send messages
+     * @param chatMessageService    the service to manage chat messages
+     */
     public ChatController(SimpMessagingTemplate simpMessagingTemplate, ChatMessageService chatMessageService) {
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.chatMessageService = chatMessageService;
     }
 
+    /**
+     * Processes a chat message sent by a user.
+     * The message is saved and then sent to the recipient's message queue.
+     * @param chatMessage the chat message to process
+     */
     @MessageMapping("/chat")
     public void processMessage(
             @Payload ChatMessage chatMessage
@@ -42,6 +56,12 @@ public class ChatController {
         );
     }
 
+    /**
+     * Retrieves the chat messages between two users.
+     * @param senderId the ID of the sender
+     * @param recipientId the ID of the recipient
+     * @return a list of chat messages between the two users
+     */
     @GetMapping("/messages/{senderId}/{recipientId}")
     public ResponseEntity<List<ChatMessage>> findChatMessages(
             @PathVariable String senderId,
