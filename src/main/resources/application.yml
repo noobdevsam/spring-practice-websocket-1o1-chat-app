@@ -1,0 +1,3 @@
+spring:
+    application:
+        name: spring-practice-websocket-1o1-chat-app

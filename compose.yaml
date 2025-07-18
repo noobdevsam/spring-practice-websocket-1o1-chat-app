@@ -1,0 +1,16 @@
+services:
+    mongodb-chat-app:
+        container_name: mongodb-chat-app
+        image: 'mongo:latest'
+        environment:
+            - 'MONGO_INITDB_DATABASE=mydatabase'
+            - 'MONGO_INITDB_ROOT_PASSWORD=secret'
+            - 'MONGO_INITDB_ROOT_USERNAME=root'
+        ports:
+            - '27017'
+        volumes:
+            -   mongodb-chat-app-data:/data/db
+
+volumes:
+    mongodb-chat-app-data:
+        driver: local
