@@ -36,7 +36,7 @@ const CONFIG = {
     },
     SUBSCRIPTIONS: {
         MESSAGES: (nickname) => `/user/${nickname}/queue/messages`,
-        PUBLIC: '/user/public'
+        PUBLIC: '/topic/public'
     }
 };
 
@@ -101,14 +101,16 @@ const websocket = {
 
     onConnected: () => {
         try {
-            // Subscribe to message queues
+            // Subscribe to private message queue
             state.stompClient.subscribe(
                 CONFIG.SUBSCRIPTIONS.MESSAGES(state.nickname),
                 messageHandler.onMessageReceived
             );
+
+            // Subscribe to public user status updates
             state.stompClient.subscribe(
                 CONFIG.SUBSCRIPTIONS.PUBLIC,
-                messageHandler.onMessageReceived
+                messageHandler.onUserStatusUpdate
             );
 
             // Register the connected user
@@ -257,6 +259,28 @@ const messageHandler = {
         }
     },
 
+    onUserStatusUpdate: async (payload) => {
+        try {
+            const userStatus = JSON.parse(payload.body);
+            console.log('User status updated', userStatus);
+
+            // Refresh the connected users list to reflect current online users
+            await ui.findAndDisplayConnectedUsers();
+
+            // If the disconnected user was selected, hide the message form
+            if (userStatus.status === 'OFFLINE' && state.selectedUserId === userStatus.nickName) {
+                state.selectedUserId = null;
+                utils.toggleClass(DOM.messageForm, 'hidden', true);
+                utils.clearElement(DOM.chatArea);
+            }
+
+            // Restore the active user selection if still online
+            messageHandler.updateActiveUser();
+        } catch (error) {
+            console.error('Error processing user status update:', error);
+        }
+    },
+
     updateActiveUser: () => {
         if (state.selectedUserId) {
             const selectedUser = document.querySelector(`#${state.selectedUserId}`);
@@ -314,9 +338,11 @@ const eventHandlers = {
         utils.scrollToBottom(DOM.chatArea);
     },
 
-    logout: () => {
+    logout: (event) => {
         websocket.sendUserStatus('OFFLINE');
-        window.location.reload();
+        if (!event || event.type !== 'beforeunload') {
+            window.location.reload();
+        }
     }
 };
 
