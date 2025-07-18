@@ -24,10 +24,6 @@ public class ChatRoom {
         this.recipientId = recipientId;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     @Override
     public final boolean equals(Object o) {
         if (!(o instanceof ChatRoom chatRoom)) return false;
@@ -77,34 +73,4 @@ public class ChatRoom {
         return result;
     }
 
-    public static class Builder {
-        private String id;
-        private String chatId;
-        private String senderId;
-        private String recipientId;
-
-        public Builder id(String id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder chatId(String chatId) {
-            this.chatId = chatId;
-            return this;
-        }
-
-        public Builder senderId(String senderId) {
-            this.senderId = senderId;
-            return this;
-        }
-
-        public Builder recipientId(String recipientId) {
-            this.recipientId = recipientId;
-            return this;
-        }
-
-        public ChatRoom build() {
-            return new ChatRoom(id, chatId, senderId, recipientId);
-        }
-    }
 }
