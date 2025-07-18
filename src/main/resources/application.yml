@@ -1,3 +1,14 @@
 spring:
     application:
         name: spring-practice-websocket-1o1-chat-app
+    data:
+        mongodb:
+            username: root
+            password: secret
+            database: mydatabase
+            port: 27017
+            host: localhost
+            authentication-database: admin
+
+server:
+    port: 8088
